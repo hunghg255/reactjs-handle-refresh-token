@@ -1,0 +1,12 @@
+{
+  "extends": "react-app",
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "react/display-name": "off",
+    "react/prop-types": "off",
+    "react/jsx-key": "error",
+    "no-console": 1,
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "error"
+  }
+}
