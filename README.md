@@ -6,4 +6,6 @@
 
 ## 2. Token management package: After all requests failed, we will call a request to take a new access token after that retry all requests which failed
 
+`NPM: https://www.npmjs.com/package/token-management`
+
 ![alt text](./public/token-management.png)
