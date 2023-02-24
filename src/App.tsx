@@ -53,6 +53,7 @@ function App() {
 
       <div>
         <button onClick={onLogin}>Login and save token to localStorage</button>
+        <p>Token will expire after 2m. Check network</p>
       </div>
     </div>
   );

@@ -1,9 +1,10 @@
 import EventEmitter from './EventEmitter';
 
-interface TokenManagerContructor {
+export interface TokenManagerContructor {
   getAccessToken: () => Promise<string>;
   getRefreshToken: () => Promise<string>;
-  isValidRefreshToken: (refresh_token: string) => Promise<boolean>;
+  isValidToken?: (token: string) => Promise<boolean>;
+  isValidRefreshToken?: (refresh_token: string) => Promise<boolean>;
   executeRefreshToken: () => Promise<{ token: string; refresh_token: string }>;
   onRefreshTokenSuccess: ({
     token,
@@ -16,20 +17,65 @@ interface TokenManagerContructor {
   refreshTimeout?: number;
 }
 
+export const parseJwt = (token: string) => {
+  try {
+    return JSON.parse(atob(token.split('.')[1]));
+  } catch (e) {
+    return null;
+  }
+};
+
+export const injectBearer = (token: string, configs: any) => {
+  if (!configs) {
+    return {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+  }
+
+  if (configs?.headers?.Authorization) {
+    return {
+      ...configs,
+      headers: {
+        ...configs.headers,
+      },
+    };
+  }
+
+  if (configs?.headers) {
+    return {
+      ...configs,
+      headers: {
+        ...configs.headers,
+        Authorization: `Bearer ${token}`,
+      },
+    };
+  }
+
+  return {
+    ...configs,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+};
+
 export default class TokenManager {
   private event: EventEmitter;
   public getAccessToken;
   public getRefreshToken;
-  public onInvalidRefreshToken;
-  public isRefreshing: boolean = false;
-  public refreshTimeout: number;
-  public isValidRefreshToken;
-  public onRefreshTokenSuccess;
-  public executeRefreshToken;
+  private onInvalidRefreshToken;
+  private isRefreshing: boolean = false;
+  private refreshTimeout: number = 30000;
+  private isValidRefreshToken;
+  private onRefreshTokenSuccess;
+  private isValidToken;
 
   constructor({
     getRefreshToken,
     getAccessToken,
+    isValidToken,
     refreshTimeout = 30000,
     executeRefreshToken,
     onInvalidRefreshToken,
@@ -41,9 +87,19 @@ export default class TokenManager {
     this.getAccessToken = getAccessToken;
     this.getRefreshToken = getRefreshToken;
     this.onInvalidRefreshToken = onInvalidRefreshToken;
-    this.isValidRefreshToken = isValidRefreshToken;
     this.onRefreshTokenSuccess = onRefreshTokenSuccess;
-    this.executeRefreshToken = executeRefreshToken;
+
+    if (isValidToken) {
+      this.isValidToken = isValidToken;
+    } else {
+      this.isValidToken = this.isTokenValid;
+    }
+
+    if (isValidRefreshToken) {
+      this.isValidRefreshToken = isValidRefreshToken;
+    } else {
+      this.isValidRefreshToken = this.isTokenValid;
+    }
 
     event.on('refreshTokenExpired', () => {
       this.onInvalidRefreshToken && this.onInvalidRefreshToken();
@@ -58,7 +114,7 @@ export default class TokenManager {
             event.emit('refreshTokenExpired');
           } else {
             const token = await getAccessToken();
-            const isValid: boolean = await this.isTokenValid();
+            const isValid: boolean = await this.isValidToken(token);
             if (isValid) {
               event.emit('refreshDone', token);
             } else {
@@ -78,8 +134,7 @@ export default class TokenManager {
       this.isRefreshing = true;
 
       const evtFire = false;
-
-      const { token, refresh_token } = await this.executeRefreshToken();
+      const { token, refresh_token } = await executeRefreshToken();
       if (token && refresh_token) {
         this.onRefreshTokenSuccess && this.onRefreshTokenSuccess({ token, refresh_token });
       }
@@ -116,19 +171,9 @@ export default class TokenManager {
     });
   }
 
-  parseJwt(token: string) {
+  async isTokenValid(token: string) {
     try {
-      return JSON.parse(atob(token.split('.')[1]));
-    } catch (e) {
-      return null;
-    }
-  }
-
-  async isTokenValid() {
-    try {
-      const token = await this.getAccessToken();
-
-      const decoded = this.parseJwt(token);
+      const decoded = parseJwt(token);
       const { exp } = decoded;
 
       const currentTime = Date.now() / 1000;
