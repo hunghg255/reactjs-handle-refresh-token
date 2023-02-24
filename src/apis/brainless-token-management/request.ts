@@ -3,7 +3,7 @@ import TokenManager, { injectBearer } from '.';
 
 // Can implement by umi-request, axios, fetch....
 export const requestNew = extend({
-  prefix: process.env.VITE_APP_API,
+  prefix: 'https://test-react.agiletech.vn',
   headers: {
     'Content-Type': 'application/json',
   },
