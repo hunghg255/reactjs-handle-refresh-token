@@ -53,7 +53,17 @@ function App() {
 
       <div>
         <button onClick={onLogin}>Login and save token to localStorage</button>
-        <p>Token will expire after 2m. Check network</p>
+        <p>Token will expire after 2m. Please check network</p>
+      </div>
+
+      <div>
+        <a
+          href='https://stackblitz.com/edit/react-ts-mdxcmx?file=App.tsx'
+          target={'_blank'}
+          rel='noreferrer'
+        >
+          Source code
+        </a>
       </div>
     </div>
   );
