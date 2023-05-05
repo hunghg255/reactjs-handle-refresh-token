@@ -5,7 +5,8 @@ import { axiosInstant } from './apis/axios/request';
 import { umiRequestInstant } from './apis/umirequest/request';
 import { privateRequest, request } from './apis/token-management/request';
 import { privateRequestNew, requestNew } from './apis/brainless-token-management/request';
-
+import { GithubCorners } from '@uiw/github-corners';
+import GitHubCorners from '@uiw/react-github-corners';
 const Post1 = () => {
   useEffect(() => {
     privateRequestNew(requestNew.get, '/posts');
@@ -56,15 +57,11 @@ function App() {
         <p>Token will expire after 2m. Please check network</p>
       </div>
 
-      <div>
-        <a
-          href='https://stackblitz.com/edit/react-ts-mdxcmx?file=App.tsx'
-          target={'_blank'}
-          rel='noreferrer'
-        >
-          Source code
-        </a>
-      </div>
+      <GitHubCorners
+        position='right'
+        href='https://stackblitz.com/edit/react-ts-mdxcmx?file=App.tsx'
+        bgColor='dodgerblue'
+      />
     </div>
   );
 }
