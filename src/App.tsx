@@ -5,8 +5,8 @@ import { axiosInstant } from './apis/axios/request';
 import { umiRequestInstant } from './apis/umirequest/request';
 import { privateRequest, request } from './apis/token-management/request';
 import { privateRequestNew, requestNew } from './apis/brainless-token-management/request';
-import { GithubCorners } from '@uiw/github-corners';
-import GitHubCorners from '@uiw/react-github-corners';
+import GitHubCorners from 'react-gh-corners';
+
 const Post1 = () => {
   useEffect(() => {
     privateRequestNew(requestNew.get, '/posts');
