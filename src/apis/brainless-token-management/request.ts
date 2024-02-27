@@ -1,9 +1,9 @@
 import { extend } from 'umi-request';
-import TokenManager, { injectBearer } from '.';
+import TokenManager, { injectBearer } from 'brainless-token-manager';
 
 // Can implement by umi-request, axios, fetch....
 export const requestNew = extend({
-  prefix: 'https://test-react.agiletech.vn',
+  prefix: process.env.VITE_APP_API,
   headers: {
     'Content-Type': 'application/json',
   },
