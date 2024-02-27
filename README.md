@@ -5,10 +5,8 @@
 
 ![alt text](./public/axios-umi-request-y-interceptors.png)
 
-### 2. `token-management` and `brainless-token-manager`
+### 2. `brainless-token-manager`
   - Check access token expire if token expire will call a request to take a new access token after that call requests
-
-[token-management](https://www.npmjs.com/package/token-management)
 
 [brainless-token-manager](https://www.npmjs.com/package/brainless-token-manager)
 
