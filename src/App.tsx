@@ -10,9 +10,7 @@ import { api } from '@/apis/axios-gentype/request';
 
 const Post1 = () => {
   useEffect(() => {
-    // privateRequestNew(requestNew.get, '/posts');
-
-    api.posts.posts();
+    privateRequestNew(requestNew.get, '/posts');
   }, []);
 
   return <h1>Component 1</h1>;
@@ -20,10 +18,7 @@ const Post1 = () => {
 
 const Post2 = () => {
   useEffect(() => {
-    // privateRequestNew(requestNew.get, '/posts?page=2');
-    api.posts.posts({
-      page: '2',
-    });
+    privateRequestNew(requestNew.get, '/posts?page=2');
   }, []);
 
   return <h1>Component 2</h1>;
@@ -37,30 +32,23 @@ function App() {
   }, []);
 
   useEffect(() => {
-    // privateRequestNew(requestNew.get, '/posts?page=1');
-    api.posts.posts({
-      page: '1',
-    });
+    privateRequestNew(requestNew.get, '/posts?page=1');
   }, []);
 
   const onLogin = async () => {
-    // const r = await fetch(`${process.env.VITE_APP_API}/auth/login`, {
-    //   method: 'post',
-    //   body: JSON.stringify({
-    //     username: 'adminRefresh2',
-    //   }),
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    // }).then((r) => r.json());
+    const r = await fetch(`${process.env.VITE_APP_API}/auth/login`, {
+      method: 'post',
+      body: JSON.stringify({
+        username: 'adminRefresh2',
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }).then((r) => r.json());
 
-    const r = await api.auth.login({
-      username: 'adminRefresh2',
-    });
-
-    if (r?.data?.accessToken) {
-      localStorage.setItem('accessToken', r?.data?.accessToken);
-      localStorage.setItem('refreshToken', r?.data?.refreshToken);
+    if (r?.accessToken) {
+      localStorage.setItem('accessToken', r?.accessToken);
+      localStorage.setItem('refreshToken', r?.refreshToken);
       setLogin(true);
     }
   };
