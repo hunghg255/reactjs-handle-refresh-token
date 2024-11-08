@@ -39,10 +39,10 @@ export default defineConfig({
   esbuild: {
     sourcemap: true,
   },
-  server: {
-    port: 5001,
-  },
-  preview: {
-    port: 5001,
-  },
+  // server: {
+  //   port: 5001,
+  // },
+  // preview: {
+  //   port: 5001,
+  // },
 });
